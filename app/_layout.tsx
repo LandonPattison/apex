@@ -14,6 +14,9 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    GothicNeo: require('../assets/fonts/gothicNeo.ttf'), // Add another font here
+    Anonymous_Pro: require('../assets/fonts/Anonymous_Pro.ttf'), // Add another font here,
+    Anonymous_Pro_B: require('../assets/fonts/Anonymous_Pro_B.ttf'), // Add another font here
   });
 
   useEffect(() => {

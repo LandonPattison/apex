@@ -14,3 +14,5 @@ To-Do
 - Improve navigation styling.
 - Add functionality for users to take notes.
 - skeleton for data fetching logic in code
+
+<img width="435" alt="Screenshot 2024-10-07 at 5 37 26 PM" src="https://github.com/user-attachments/assets/dbc24bc3-9a7e-43ae-a97a-90675db2138a">

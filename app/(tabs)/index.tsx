@@ -1,70 +1,170 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React, { useState } from 'react';
+import { 
+  View,
+  ScrollView, 
+  StyleSheet, 
+  Dimensions,
+  Text,
+  TouchableOpacity
+} from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+// Get the screen height
+const { height: screenHeight } = Dimensions.get('window');
 
 export default function HomeScreen() {
+  const quote: string = "If you don't get what you want, you SUFFER...";
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <>
+      {/* Removing SafeAreaView to ignore the top safe area */}
+      <View style={styles.container}>
+        <ScrollView style={styles.scrollView}>
+          <Header 
+            quote={quote}
+          />
+          <View >
+            <DatePicker />
+          </View>
+        </ScrollView>
+      </View>
+    </>
   );
 }
 
+interface HeaderProps {
+  quote: string;
+}
+
+function Header({ quote }: HeaderProps) {
+  return (
+    <View style={styles.headerRoundedRectangle}>
+      <View style={styles.headerContent}>
+        <Text>Mindset</Text>
+      </View>
+      <View style={styles.quoteContainer}>
+        <Text>Quoate Icon</Text>
+
+        <Text>{quote}</Text>
+      </View>
+    </View>
+  );
+}
+
+const DatePicker = () => {
+  const [selectedDate, setSelectedDate] = useState<number | null>(null); // State to track the selected date with 'number | null' type
+
+  const days: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const dates: string[] = ['1', '2', '3', '4', '5', '6', '7']; // Example dates, typed as string array
+
+  const handleDatePress = (index: number) => {
+    setSelectedDate(index); // Update selected date when a user taps a day/date
+  };
+
+  return (
+    <View style={styles.DatePickerContainer}>
+      <View style={styles.DatePickerRoundedRectangle}>
+        <View style={styles.DatesContainer}>
+          {days.map((day, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[
+                styles.DayDateWrapper,
+                selectedDate === index && styles.SelectedDayDateWrapper, // Apply selected style
+              ]}
+              onPress={() => handleDatePress(index)}
+            >
+              <Text
+                style={[
+                  styles.DayText,
+                  selectedDate === index && styles.SelectedDayText,
+                ]}
+              >
+                {day}
+              </Text>
+              <Text
+                style={[
+                  styles.DateText,
+                  selectedDate === index && styles.SelectedDateText,
+                ]}
+              >
+                {dates[index]}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    flexDirection: 'column',
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  headerRoundedRectangle: {
+    backgroundColor: '#f0f0f0',  // Change this to your desired background color
+    borderRadius: 10,  // Adjust this value for the amount of roundness
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 5,  // For Android shadow
+    height: screenHeight * 0.25,  // Set height to 20% of the screen height
+
+  },
+  headerContent: {
+    flex: 1,
     alignItems: 'center',
-    gap: 8,
+    paddingTop: 60
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  quoteContainer: {
+    flex: 1,
+    paddingHorizontal: 20,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  DatePickerContainer: {
+    paddingHorizontal: 10,
+    paddingVertical: 20,
+  },
+  DatePickerRoundedRectangle: {
+    width: '100%',
+    height: 100, // Adjust height to fit both days and dates
+    backgroundColor: '#ccc',
+    borderRadius: 20,
+    justifyContent: 'center', // Center the content inside the rectangle
+  },
+  DatesContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between', // Evenly distribute the days and dates horizontally
+    alignItems: 'center',
+    paddingHorizontal: 20, // Add horizontal padding
+  },
+  DayDateWrapper: {
+    alignItems: 'center', // Center day and date vertically
+    padding: 10, // Add padding around the text
+  },
+  SelectedDayDateWrapper: {
+    backgroundColor: '#555', // Darker background for selected date
+    borderRadius: 10, // Rounded corners for selected date
+  },
+  DayText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  SelectedDayText: {
+    color: '#fff', // White text color for selected day
+  },
+  DateText: {
+    fontSize: 14,
+    color: '#555',
+    marginTop: 5, // Adds a gap between day and date
+  },
+  SelectedDateText: {
+    color: '#fff', // White text color for selected date
   },
 });
